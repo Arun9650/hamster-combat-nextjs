@@ -1,113 +1,271 @@
+'use client'
+
+import Coins from "@/public/icons/Coins";
+import Friends from "@/public/icons/Friends";
+import Hamster from "@/public/icons/Hamster";
+import Info from "@/public/icons/Info";
+import Mine from "@/public/icons/Mine";
+import Settings from "@/public/icons/Settings";
+import { binanceLogo, dailyCipher, dailyCombo, dailyReward, dollarCoin, hamsterCoin, mainCharacter } from "@/public/images";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
 
 export default function Home() {
+
+  const route  = useRouter();
+
+  const levelNames = [
+    "Bronze",    // From 0 to 4999 coins
+    "Silver",    // From 5000 coins to 24,999 coins
+    "Gold",      // From 25,000 coins to 99,999 coins
+    "Platinum",  // From 100,000 coins to 999,999 coins
+    "Diamond",   // From 1,000,000 coins to 2,000,000 coins
+    "Epic",      // From 2,000,000 coins to 10,000,000 coins
+    "Legendary", // From 10,000,000 coins to 50,000,000 coins
+    "Master",    // From 50,000,000 coins to 100,000,000 coins
+    "GrandMaster", // From 100,000,000 coins to 1,000,000,000 coins
+    "Lord"       // From 1,000,000,000 coins to ∞
+  ];
+
+  const levelMinPoints = [
+    0,        // Bronze
+    5000,     // Silver
+    25000,    // Gold
+    100000,   // Platinum
+    1000000,  // Diamond
+    2000000,  // Epic
+    10000000, // Legendary
+    50000000, // Master
+    100000000,// GrandMaster
+    1000000000// Lord
+  ];
+
+
+  
+    const [levelIndex, setLevelIndex] = useState(6);
+  const [points, setPoints] = useState(22749365);
+  const [clicks, setClicks] = useState<{ id: number, x: number, y: number }[]>([]);
+  const pointsToAdd = 1;
+  const profitPerHour = 126420;
+
+  const [dailyRewardTimeLeft, setDailyRewardTimeLeft] = useState("");
+  const [dailyCipherTimeLeft, setDailyCipherTimeLeft] = useState("");
+  const [dailyComboTimeLeft, setDailyComboTimeLeft] = useState("");
+
+  const calculateTimeLeft = (targetHour: number) => {
+    const now = new Date();
+    const target = new Date(now);
+    target.setUTCHours(targetHour, 0, 0, 0);
+
+    if (now.getUTCHours() >= targetHour) {
+      target.setUTCDate(target.getUTCDate() + 1);
+    }
+
+    const diff = target.getTime() - now.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    const paddedHours = hours.toString().padStart(2, '0');
+    const paddedMinutes = minutes.toString().padStart(2, '0');
+
+    return `${paddedHours}:${paddedMinutes}`;
+  };
+
+  useEffect(() => {
+    const updateCountdowns = () => {
+      setDailyRewardTimeLeft(calculateTimeLeft(0));
+      setDailyCipherTimeLeft(calculateTimeLeft(19));
+      setDailyComboTimeLeft(calculateTimeLeft(12));
+    };
+
+    updateCountdowns();
+    const interval = setInterval(updateCountdowns, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    card.style.transform = `perspective(1000px) rotateX(${-y / 10}deg) rotateY(${x / 10}deg)`;
+    setTimeout(() => {
+      card.style.transform = '';
+    }, 100);
+
+    setPoints(points + pointsToAdd);
+    setClicks([...clicks, { id: Date.now(), x: e.pageX, y: e.pageY }]);
+  };
+
+  const handleAnimationEnd = (id: number) => {
+    setClicks((prevClicks) => prevClicks.filter(click => click.id !== id));
+  };
+
+  const calculateProgress = () => {
+    if (levelIndex >= levelNames.length - 1) {
+      return 100;
+    }
+    const currentLevelMin = levelMinPoints[levelIndex];
+    const nextLevelMin = levelMinPoints[levelIndex + 1];
+    const progress = ((points - currentLevelMin) / (nextLevelMin - currentLevelMin)) * 100;
+    return Math.min(progress, 100);
+  };
+
+  useEffect(() => {
+    const currentLevelMin = levelMinPoints[levelIndex];
+    const nextLevelMin = levelMinPoints[levelIndex + 1];
+    if (points >= nextLevelMin && levelIndex < levelNames.length - 1) {
+      setLevelIndex(levelIndex + 1);
+    } else if (points < currentLevelMin && levelIndex > 0) {
+      setLevelIndex(levelIndex - 1);
+    }
+  }, [points, levelIndex, levelMinPoints, levelNames.length]);
+
+  const formatProfitPerHour = (profit: number) => {
+    if (profit >= 1000000000) return `+${(profit / 1000000000).toFixed(2)}B`;
+    if (profit >= 1000000) return `+${(profit / 1000000).toFixed(2)}M`;
+    if (profit >= 1000) return `+${(profit / 1000).toFixed(2)}K`;
+    return `+${profit}`;
+  };
+
+  // useEffect(() => {
+  //   const pointsPerSecond = Math.floor(profitPerHour / 3600);
+  //   const interval = setInterval(() => {
+  //     setPoints(prevPoints => prevPoints + pointsPerSecond);
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, [profitPerHour]);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="bg-black flex justify-center">
+      <div className="w-full bg-black text-white h-screen font-bold flex flex-col max-w-xl">
+        <div className="px-4 z-10">
+          <div className="flex items-center space-x-2 pt-4">
+            <div className="p-1 rounded-lg bg-[#1d2025]">
+              <Hamster size={24} className="text-[#d4d4d4]" />
+            </div>
+            <div>
+              <p className="text-sm">Nikandr (CEO)</p>
+            </div>
+          </div>
+          <div className="flex items-center justify-between space-x-4 mt-1">
+            <div className="flex items-center w-1/3">
+              <div className="w-full">
+                <div className="flex justify-between">
+                  <p className="text-sm">{levelNames[levelIndex]}</p>
+                  <p className="text-sm">{levelIndex + 1} <span className="text-[#95908a]">/ {levelNames.length}</span></p>
+                </div>
+                <div className="flex items-center mt-1 border-2 border-[#43433b] rounded-full">
+                  <div className="w-full h-2 bg-[#43433b]/[0.6] rounded-full">
+                    <div className="progress-gradient h-2 rounded-full" style={{ width: `${calculateProgress()}%` }}></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center w-2/3 border-2 border-[#43433b] rounded-full px-4 py-[2px] bg-[#43433b]/[0.6] max-w-64">
+              <Image src={binanceLogo} alt="Exchange" className="w-8 h-8" />
+              <div className="h-[32px] w-[2px] bg-[#43433b] mx-2"></div>
+              <div className="flex-1 text-center">
+                <p className="text-xs text-[#85827d] font-medium">Profit per hour</p>
+                <div className="flex items-center justify-center space-x-1">
+                  <Image src={dollarCoin} alt="Dollar Coin" className="w-[18px] h-[18px]" />
+                  <p className="text-sm">{formatProfitPerHour(profitPerHour)}</p>
+                  <Info size={20} className="text-[#43433b]" />
+                </div>
+              </div>
+              <div className="h-[32px] w-[2px] bg-[#43433b] mx-2"></div>
+              <Settings className="text-white" />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex-grow mt-4 bg-[#f3ba2f] rounded-t-[48px] relative top-glow z-0">
+          <div className="absolute top-[2px] left-0 right-0 bottom-0 bg-[#1d2025] rounded-t-[46px]">
+            <div className="px-4 mt-6 flex justify-between gap-2">
+              <div className="bg-[#272a2f] rounded-lg px-4 py-2 w-full relative">
+                <div className="dot"></div>
+                <Image src={dailyReward} alt="Daily Reward" className="mx-auto w-12 h-12" />
+                <p className="text-[10px] text-center text-white mt-1">Daily reward</p>
+                <p className="text-[10px] font-medium text-center text-gray-400 mt-2">{dailyRewardTimeLeft}</p>
+              </div>
+              <div className="bg-[#272a2f] rounded-lg px-4 py-2 w-full relative">
+                <div className="dot"></div>
+                <Image src={dailyCipher} alt="Daily Cipher" className="mx-auto w-12 h-12" />
+                <p className="text-[10px] text-center text-white mt-1">Daily cipher</p>
+                <p className="text-[10px] font-medium text-center text-gray-400 mt-2">{dailyCipherTimeLeft}</p>
+              </div>
+              <div className="bg-[#272a2f] rounded-lg px-4 py-2 w-full relative">
+                <div className="dot"></div>
+                <Image src={dailyCombo} alt="Daily Combo" className="mx-auto w-12 h-12" />
+                <p className="text-[10px] text-center text-white mt-1">Daily combo</p>
+                <p className="text-[10px] font-medium text-center text-gray-400 mt-2">{dailyComboTimeLeft}</p>
+              </div>
+            </div>
+
+            <div className="px-4 mt-4 flex justify-center">
+              <div className="px-4 py-2 flex items-center space-x-2">
+                <Image src={dollarCoin} alt="Dollar Coin" className="w-10 h-10" />
+                <p className="text-4xl text-white">{points.toLocaleString()}</p>
+              </div>
+            </div>
+
+            <div className="px-4 mt-4 flex justify-center">
+              <div
+                className="w-80 h-80 p-4 rounded-full circle-outer"
+                onClick={handleCardClick}
+              >
+                <div className="w-full h-full rounded-full circle-inner">
+                  <Image src={mainCharacter} alt="Main Character" className="w-full h-full" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      {/* Bottom fixed div */}
+      <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] max-w-xl bg-[#272a2f] flex justify-around items-center z-50 rounded-3xl text-xs">
+        <div className="text-center text-[#85827d] w-1/5 bg-[#1c1f24] m-1 p-2 rounded-2xl">
+          <Image src={binanceLogo} alt="Exchange" className="w-8 h-8 mx-auto" />
+          <p className="mt-1">Exchange</p>
+        </div>
+        <div className="text-center text-[#85827d] w-1/5">
+          <Mine className="w-8 h-8 mx-auto" />
+          <p className="mt-1">Mine</p>
+        </div>
+        <button onClick={() => route.push("/inviteFriends")} className="text-center text-[#85827d] w-1/5">
+          <Friends className="w-8 h-8 mx-auto" />
+          <p className="mt-1">Friends</p>
+        </button>
+        <div className="text-center text-[#85827d] w-1/5">
+          <Coins className="w-8 h-8 mx-auto" />
+          <p className="mt-1">Earn</p>
+        </div>
+        <div className="text-center text-[#85827d] w-1/5">
+          <Image src={hamsterCoin} alt="Airdrop" className="w-8 h-8 mx-auto" />
+          <p className="mt-1">Airdrop</p>
+        </div>
       </div>
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
+      {clicks.map((click) => (
+        <div
+          key={click.id}
+          className="absolute text-5xl font-bold opacity-0 text-white pointer-events-none"
+          style={{
+            top: `${click.y - 42}px`,
+            left: `${click.x - 28}px`,
+            animation: `float 1s ease-out`
+          }}
+          onAnimationEnd={() => handleAnimationEnd(click.id)}
         >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+          {pointsToAdd}
+        </div>
+      ))}
+    </div>
   );
-}
+};
+
+
