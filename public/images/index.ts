@@ -6,6 +6,12 @@ import dailyCipher from "./daily-cipher.png";
 import dailyCombo from "./daily-combo.png";
 import mainCharacter from "./main-character.png";
 import hamsterCoin from "./hamster-coin.png";
+import Calendar from "./calendar.png";
+import Youtube from './youtube.png'
+import Telegram from './telegram.png'
+import X from './x.png'
+import InviteFriend from './invitefriends.png'
+
 
 export {
     hamsterExchange,
@@ -15,5 +21,10 @@ export {
     dailyCipher,
     dailyCombo,
     mainCharacter,
-    hamsterCoin
+    hamsterCoin,
+    Calendar,
+    Youtube,
+    Telegram,
+    X,
+    InviteFriend
 };
