@@ -52,7 +52,7 @@ const EarnMoreCoins = () => {
           </div>
           <div className="p-4 bg-[#1d2025] rounded-2xl mt-2 flex items-center justify-between">
             <div className="flex items-center">
-              <Image src={X} alt="Telegram" className="w-16  h-16 mr-2" />
+              <Image src={X} alt="Telegram" className="w-12  h-12 mr-4" />
               <div>
                 <p className="font-semibold">Follow our X account</p>
                 <p className="text-yellow-400">+5,000</p>
@@ -76,7 +76,7 @@ const EarnMoreCoins = () => {
           </div>
           <div className="p-4 bg-[#1d2025] rounded-2xl mt-2 mb-16 flex items-center justify-between">
             <div className="flex items-center">
-              <Image src={InviteFriend} alt="Telegram" className="w-16 h-16 mr-2" />
+              <Image src={InviteFriend} alt="Telegram" className="w-12 h-12 mr-4" />
               <div>
                 <p className="font-semibold">Invite 3 Friends</p>
                 <p className="text-yellow-400">+5,000</p>

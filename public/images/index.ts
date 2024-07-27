@@ -11,6 +11,8 @@ import Youtube from './youtube.png'
 import Telegram from './telegram.png'
 import X from './x.png'
 import InviteFriend from './invitefriends.png'
+import tonWallet from './3d-wallet.png'
+import Gift from './gift.png'
 
 
 export {
@@ -26,5 +28,7 @@ export {
     Youtube,
     Telegram,
     X,
-    InviteFriend
+    InviteFriend,
+    tonWallet,
+    Gift
 };

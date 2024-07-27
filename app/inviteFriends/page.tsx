@@ -1,5 +1,7 @@
 // components/InviteFriends.js
 
+import { Gift } from '@/public/images';
+import Image from 'next/image';
 import React from 'react';
 
 const InviteFriends = () => {
@@ -10,7 +12,7 @@ const InviteFriends = () => {
       <div className="space-y-4">
         <div className="p-4 bg-gray-800 rounded-2xl flex items-center justify-between">
           <div className="flex items-center">
-            <img src="/gift-icon.png" alt="Gift" className="w-12 h-12 mr-4" />
+            <Image src={Gift} alt="Gift" className="w-16 h-16 mr-4" />
             <div>
               <p className="font-semibold ">Invite a friend</p>
               <p className="text-yellow-400">+5,000 for you and your friend</p>
@@ -19,7 +21,7 @@ const InviteFriends = () => {
         </div>
         <div className="p-4 bg-gray-800 rounded-2xl flex items-center justify-between">
           <div className="flex items-center">
-            <img src="/gift-icon.png" alt="Gift" className="w-12 h-12 mr-4" />
+            <Image src={Gift} alt="Gift" className="w-16 h-16 mr-4 " />
             <div>
               <p className="font-semibold text-xl" >Invite a friend with Telegram Premium</p>
               <p className="text-yellow-400">+25,000 for you and your friend</p>
