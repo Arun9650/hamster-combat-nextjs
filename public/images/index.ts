@@ -13,6 +13,9 @@ import X from './x.png'
 import InviteFriend from './invitefriends.png'
 import tonWallet from './3d-wallet.png'
 import Gift from './gift.png'
+import Bees from './bees.png'
+import MainBee from './BeeMain.png'
+import BeeCoin from './bee-coin3.png'
 
 
 export {
@@ -30,5 +33,8 @@ export {
     X,
     InviteFriend,
     tonWallet,
-    Gift
+    Gift,
+    Bees,
+    MainBee,
+    BeeCoin
 };

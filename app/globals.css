@@ -75,9 +75,9 @@ body{
 
 .glowing-coin {
   position: relative;
-  width: 100px;
-  height: 100px;
-  background: url('/images/hamster-coin.png') no-repeat center center;
+  width: 140px;
+  height: 140px;
+  background: url('/images/bee-coin3.png') no-repeat center center;
   background-size: contain;
   border-radius: 50%;
   box-shadow: 0 0 60px rgba(255, 223, 0, 0.8), 0 0 100px rgba(255, 223, 0, 0.6), 0 0 140px rgba(255, 223, 0, 0.4);

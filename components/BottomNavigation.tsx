@@ -3,7 +3,7 @@
 import Coins from "@/public/icons/Coins";
 import Friends from "@/public/icons/Friends";
 import Mine from "@/public/icons/Mine";
-import { binanceLogo, hamsterCoin } from "@/public/images";
+import { BeeCoin, Bees, binanceLogo, hamsterCoin } from "@/public/images";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -40,7 +40,7 @@ const BottomNavigation = () => {
     },
     {
       name: "AirDrop",
-      icon: <Image src={hamsterCoin} width={34} height={34} alt="AirDrop" />,
+      icon: <Image src={BeeCoin} width={34} height={34} alt="AirDrop" />,
       link: "/AirDrop",
     },
   ];

@@ -6,7 +6,7 @@ import Hamster from "@/public/icons/Hamster";
 import Info from "@/public/icons/Info";
 import Mine from "@/public/icons/Mine";
 import Settings from "@/public/icons/Settings";
-import { binanceLogo, dailyCipher, dailyCombo, dailyReward, dollarCoin, hamsterCoin, mainCharacter } from "@/public/images";
+import { Bees, binanceLogo, dailyCipher, dailyCombo, dailyReward, dollarCoin, hamsterCoin, MainBee, mainCharacter } from "@/public/images";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -212,7 +212,7 @@ export default function Home() {
                 onClick={handleCardClick}
               >
                 <div className="w-full h-full rounded-full circle-inner">
-                  <Image src={mainCharacter} alt="Main Character" className="w-full h-full" />
+                  <Image src={MainBee} alt="Main Character" className="w-64 h-64" />
                 </div>
               </div>
             </div>
